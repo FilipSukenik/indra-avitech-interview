@@ -60,7 +60,7 @@ class CommunicationIntegrationTest {
     Thread backgroundProcess = new Thread(consumer);
     consumer.listenAsync(backgroundProcess);
 
-    // when 5 specific commands are sent in specific order
+    // when 5 specific commands are sent
     producer.send(new AddCommand(new User(1, "a1", "Robert"), userDao));
     producer.send(new AddCommand(new User(2, "a2", "Martin"), userDao));
     producer.send(new PrintAllCommand(printService, userDao));

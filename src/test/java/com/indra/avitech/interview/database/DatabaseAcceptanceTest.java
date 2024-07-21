@@ -35,7 +35,7 @@ class DatabaseAcceptanceTest {
   void databaseAcceptanceCriteria() throws SQLException {
     // given user dao
 
-    // when 2 adds and one deleteAll are called,
+    // when 2 adds and one deleteAll are called
     userDao.add(new User(1, "a1", "Robert"));
     Assertions.assertEquals(1, userDao.getAll().size());
 
