@@ -10,11 +10,17 @@ public class CommandExecutor implements Runnable {
 
   public CommandExecutor(Consumer consumer) {
 
+    if (consumer == null) {
+      throw new IllegalArgumentException("consumer cannot be null");
+    }
     this.consumer = consumer;
   }
 
   public void process(Command command) throws SQLException {
 
+    if (command == null) {
+      throw new IllegalArgumentException("cannot process null command");
+    }
     command.execute();
   }
 

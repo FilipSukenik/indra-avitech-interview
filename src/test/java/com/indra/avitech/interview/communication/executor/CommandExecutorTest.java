@@ -25,6 +25,18 @@ class CommandExecutorTest {
   }
 
   @Test
+  void nullConsumerTest() {
+
+    Assertions.assertThrows(IllegalArgumentException.class, () -> new CommandExecutor(null));
+  }
+
+  @Test
+  void processNullCommandTest() {
+
+    Assertions.assertThrows(IllegalArgumentException.class, () -> executor.process(null));
+  }
+
+  @Test
   void consumeThrowsInterruptedExceptionExpectThreadToBeInterrupted() throws InterruptedException {
 
     doThrow(new InterruptedException()).when(consumer).consume();
@@ -41,5 +53,4 @@ class CommandExecutorTest {
 
     Assertions.assertThrows(RuntimeException.class, () -> executor.run());
   }
-
 }

@@ -11,6 +11,9 @@ public class PrintService {
 
   public void printAll(List<User> users) {
 
+    if (users == null) {
+      throw new IllegalArgumentException("cannot print null users");
+    }
     users.forEach(user -> LOG.info(user.toString()));
   }
 }

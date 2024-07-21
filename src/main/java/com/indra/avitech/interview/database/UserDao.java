@@ -19,10 +19,17 @@ public class UserDao {
 
   public UserDao(HikariDataSource databaseConnection) {
 
+    if (databaseConnection == null) {
+      throw new IllegalArgumentException("database connection cannot be null");
+    }
     this.databaseConnection = databaseConnection;
   }
 
   public void add(User user) throws SQLException {
+
+    if (user == null) {
+      throw new IllegalArgumentException("cannot persist null user");
+    }
 
     try (var connection = databaseConnection.getConnection();
          var statement = connection.prepareStatement(INSERT_USER_TO_DATABASE_QUERY)) {

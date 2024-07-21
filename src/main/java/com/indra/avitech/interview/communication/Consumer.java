@@ -3,7 +3,7 @@ package com.indra.avitech.interview.communication;
 import com.indra.avitech.interview.communication.command.Command;
 import java.util.concurrent.BlockingQueue;
 
-public class Consumer extends Client {
+public class Consumer extends MessageBusClient {
 
   public Consumer(BlockingQueue<Command> messageBus) {
 
