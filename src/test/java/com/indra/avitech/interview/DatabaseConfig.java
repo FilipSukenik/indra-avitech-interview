@@ -38,9 +38,22 @@ public class DatabaseConfig {
     }
   }
 
-  public void teardown() {
+  public void teardown() throws IOException {
 
+    runDatabaseCleanup();
     database.close();
+  }
+
+  private void runDatabaseCleanup() throws IOException {
+    var inputStream = this.getClass().getClassLoader().getResourceAsStream("cleanup.sql");
+    String ddl = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+    try (var connection = database.getConnection();
+         PreparedStatement statement = connection.prepareStatement(ddl)
+    ) {
+      statement.execute();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public HikariDataSource getDatabase() {

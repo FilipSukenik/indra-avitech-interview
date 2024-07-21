@@ -28,7 +28,7 @@ class UserDaoTest {
   }
 
   @AfterEach
-  void tearDown() {
+  void tearDown() throws IOException {
 
     databaseConfig.teardown();
   }
@@ -65,7 +65,7 @@ class UserDaoTest {
       () -> userDao.add(new User(2, "test-uuid", "test-name")));
   }
 
-  private void assertUserCount(int i) throws SQLException {
+  private void assertUserCount(int expected) throws SQLException {
 
     try (var connection = databaseConfig.getDatabase().getConnection();
          var statement = connection.prepareStatement(COUNT_USERS_QUERY);
@@ -73,7 +73,7 @@ class UserDaoTest {
     ) {
       Assertions.assertTrue(resultSet.next());
       int count = resultSet.getInt(1);
-      Assertions.assertEquals(1, count);
+      Assertions.assertEquals(expected, count);
     }
   }
 }

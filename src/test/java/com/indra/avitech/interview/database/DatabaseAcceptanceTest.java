@@ -26,7 +26,7 @@ class DatabaseAcceptanceTest {
   }
 
   @AfterEach
-  void tearDown() {
+  void tearDown() throws IOException {
 
     databaseConfig.teardown();
   }
