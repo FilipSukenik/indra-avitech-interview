@@ -23,7 +23,7 @@ public class Consumer extends Client implements Runnable {
   @Override
   public void run() {
 
-    while (isRunning) {
+    while (isRunning && !Thread.currentThread().isInterrupted()) {
       try {
         String message = consume();
         process(message);
@@ -39,8 +39,8 @@ public class Consumer extends Client implements Runnable {
     backgroundProcess.start();
   }
 
-  public void stopAsyncRun() {
+  void setRunning(boolean running) {
 
-    isRunning = false;
+    isRunning = running;
   }
 }
