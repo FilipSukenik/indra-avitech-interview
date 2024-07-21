@@ -4,18 +4,14 @@ import com.indra.avitech.interview.communication.Consumer;
 import com.indra.avitech.interview.communication.Producer;
 import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import static org.awaitility.Awaitility.await;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
-public class CommunicationAcceptanceTest {
-
-  private BlockingQueue<String> messageBus;
+class CommunicationAcceptanceTest {
 
   private Consumer consumer;
 
@@ -24,14 +20,16 @@ public class CommunicationAcceptanceTest {
   @BeforeEach
   void setUp() {
 
-    messageBus = new LinkedBlockingQueue<>();
+    BlockingQueue<String> messageBus = new LinkedBlockingQueue<>();
     consumer = Mockito.spy(new Consumer(messageBus));
     producer = Mockito.spy(new Producer(messageBus));
   }
 
   @Test
   void acceptanceCommunicationCriteria() throws InterruptedException {
-    // given producer and consumer with shared message bus
+    // given producer and consumer with shared message bus and consumer running in own thread
+    Thread backgroundProcess = new Thread(consumer);
+    consumer.listenAsync(backgroundProcess);
 
     // when 5 commands are sent through producer
     producer.send("Add");
@@ -40,12 +38,9 @@ public class CommunicationAcceptanceTest {
     producer.send("DeleteAll");
     producer.send("PrintAll");
 
-    Thread backgroundProcess = new Thread(consumer);
-    consumer.listenAsync(backgroundProcess);
-    // then consumer process is called 5 times
-    await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> {
-        Mockito.verify(consumer, Mockito.times(5)).process(any());
-      }
+    // then consumer process is called 5 times asynchronously
+    await().atMost(Duration.ofSeconds(5)).untilAsserted(() ->
+      Mockito.verify(consumer, Mockito.times(5)).process(any())
     );
   }
 }
