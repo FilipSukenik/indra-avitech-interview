@@ -4,6 +4,7 @@ import com.indra.avitech.interview.DatabaseConfig;
 import com.indra.avitech.interview.database.model.User;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -14,6 +15,11 @@ import org.mockito.Mockito;
 class UserDaoTest {
 
   private static final String COUNT_USERS_QUERY = "SELECT COUNT(user_id) FROM susers";
+
+  private static final String INSERT_3_USER__QUERY = "INSERT INTO susers (user_id, user_guid, user_name) VALUES "
+    + "(1, 'test-guid1', 'test-name1'), "
+    + "(2, 'test-guid2', 'test-name2'), "
+    + "(3, 'test-guid3', 'test-name3')";
 
   private DatabaseConfig databaseConfig;
 
@@ -63,6 +69,23 @@ class UserDaoTest {
     userDao.add(new User(1, "test-uuid", "test-name"));
     Assertions.assertThrows(JdbcSQLIntegrityConstraintViolationException.class,
       () -> userDao.add(new User(2, "test-uuid", "test-name")));
+  }
+
+  @Test
+  void insert3UsersToDBCallGetAllAndExpect3UsersReturned() throws SQLException {
+
+    insertTestUsers();
+    List<User> users = userDao.getAll();
+    Assertions.assertEquals(3, users.size());
+  }
+
+  private void insertTestUsers() throws SQLException {
+
+    try (var connection = databaseConfig.getDatabase().getConnection();
+         var statement = connection.prepareStatement(COUNT_USERS_QUERY)
+    ) {
+      statement.execute();
+    }
   }
 
   private void assertUserCount(int expected) throws SQLException {
