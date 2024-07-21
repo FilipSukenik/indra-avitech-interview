@@ -55,7 +55,7 @@ class CommunicationIntegrationTest {
   }
 
   @Test
-  void executeWholeUseCase() throws SQLException, InterruptedException {
+  void executeWholeUseCase() throws InterruptedException {
     // given all variables and consumer running in own thread
     Thread backgroundProcess = new Thread(consumer);
     consumer.listenAsync(backgroundProcess);
