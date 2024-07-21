@@ -1,4 +1,4 @@
-package com.indra.avitech.interview;
+package com.indra.avitech.interview.communication;
 
 import com.indra.avitech.interview.communication.Consumer;
 import com.indra.avitech.interview.communication.Producer;
