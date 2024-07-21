@@ -82,7 +82,7 @@ class UserDaoTest {
   private void insertTestUsers() throws SQLException {
 
     try (var connection = databaseConfig.getDatabase().getConnection();
-         var statement = connection.prepareStatement(COUNT_USERS_QUERY)
+         var statement = connection.prepareStatement(INSERT_3_USER__QUERY)
     ) {
       statement.execute();
     }
