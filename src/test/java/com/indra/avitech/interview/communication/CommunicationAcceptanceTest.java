@@ -1,14 +1,21 @@
 package com.indra.avitech.interview.communication;
 
-import com.indra.avitech.interview.communication.Consumer;
-import com.indra.avitech.interview.communication.Producer;
+import com.indra.avitech.interview.communication.command.AddCommand;
+import com.indra.avitech.interview.communication.command.Command;
+import com.indra.avitech.interview.communication.command.DeleteAllCommand;
+import com.indra.avitech.interview.communication.command.PrintAllCommand;
+import com.indra.avitech.interview.database.UserDao;
+import com.indra.avitech.interview.database.model.User;
+import com.indra.avitech.interview.printing.PrintService;
 import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import static org.awaitility.Awaitility.await;
+import static org.awaitility.Awaitility.waitAtMost;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 class CommunicationAcceptanceTest {
@@ -17,12 +24,18 @@ class CommunicationAcceptanceTest {
 
   private Producer producer;
 
+  private UserDao userDao;
+
+  private PrintService printService;
+
   @BeforeEach
   void setUp() {
 
-    BlockingQueue<String> messageBus = new LinkedBlockingQueue<>();
+    BlockingQueue<Command> messageBus = new LinkedBlockingQueue<>();
     consumer = Mockito.spy(new Consumer(messageBus));
     producer = Mockito.spy(new Producer(messageBus));
+    userDao = Mockito.mock();
+    printService = Mockito.mock();
   }
 
   @Test
@@ -32,11 +45,11 @@ class CommunicationAcceptanceTest {
     consumer.listenAsync(backgroundProcess);
 
     // when 5 commands are sent through producer
-    producer.send("Add");
-    producer.send("Add");
-    producer.send("PrintAll");
-    producer.send("DeleteAll");
-    producer.send("PrintAll");
+    producer.send(new AddCommand(new User(1, "a1", "Robert"), userDao));
+    producer.send(new AddCommand(new User(2, "a2", "Martin"), userDao));
+    producer.send(new PrintAllCommand(printService));
+    producer.send(new DeleteAllCommand(userDao));
+    producer.send(new PrintAllCommand(printService));
 
     // then consumer process is called 5 times asynchronously
     await().atMost(Duration.ofSeconds(5)).untilAsserted(() ->

@@ -1,5 +1,6 @@
 package com.indra.avitech.interview.communication;
 
+import com.indra.avitech.interview.communication.command.Command;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +16,7 @@ class ConsumerTest {
   @BeforeEach
   void setUp() {
 
-    BlockingQueue<String> messageBus = new LinkedBlockingQueue<>();
+    BlockingQueue<Command> messageBus = new LinkedBlockingQueue<>();
     consumer = Mockito.spy(new Consumer(messageBus));
   }
 
