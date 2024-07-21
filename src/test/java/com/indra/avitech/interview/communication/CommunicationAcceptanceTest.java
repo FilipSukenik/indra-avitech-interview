@@ -47,9 +47,9 @@ class CommunicationAcceptanceTest {
     // when 5 commands are sent through producer
     producer.send(new AddCommand(new User(1, "a1", "Robert"), userDao));
     producer.send(new AddCommand(new User(2, "a2", "Martin"), userDao));
-    producer.send(new PrintAllCommand(printService));
+    producer.send(new PrintAllCommand(printService, userDao));
     producer.send(new DeleteAllCommand(userDao));
-    producer.send(new PrintAllCommand(printService));
+    producer.send(new PrintAllCommand(printService, userDao));
 
     // then consumer process is called 5 times asynchronously
     await().atMost(Duration.ofSeconds(5)).untilAsserted(() ->

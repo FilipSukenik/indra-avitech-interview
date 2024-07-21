@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mockito;
 
-public class CommunicationIntegrationTest {
+class CommunicationIntegrationTest {
 
   private UserDao userDao;
 
@@ -63,9 +63,9 @@ public class CommunicationIntegrationTest {
     // when 5 specific commands are sent in specific order
     producer.send(new AddCommand(new User(1, "a1", "Robert"), userDao));
     producer.send(new AddCommand(new User(2, "a2", "Martin"), userDao));
-    producer.send(new PrintAllCommand(printService));
+    producer.send(new PrintAllCommand(printService, userDao));
     producer.send(new DeleteAllCommand(userDao));
-    producer.send(new PrintAllCommand(printService));
+    producer.send(new PrintAllCommand(printService, userDao));
 
     // then all components are called right amount of times and database is empty
     Awaitility.await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> {

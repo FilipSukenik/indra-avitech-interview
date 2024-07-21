@@ -1,7 +1,9 @@
 package com.indra.avitech.interview.communication;
 
 import com.indra.avitech.interview.communication.command.Command;
+import java.sql.SQLException;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
 
 public class Consumer extends Client implements Runnable {
 
@@ -17,8 +19,9 @@ public class Consumer extends Client implements Runnable {
     return messageBus.take();
   }
 
-  public void process(Command message) {
+  public void process(Command command) throws SQLException {
 
+    command.execute();
   }
 
   @Override
@@ -30,6 +33,8 @@ public class Consumer extends Client implements Runnable {
         process(message);
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
+      } catch (SQLException e) {
+        throw new RuntimeException("SQLException thrown on message process", e);
       }
     }
   }
