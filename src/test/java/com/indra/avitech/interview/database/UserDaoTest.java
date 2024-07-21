@@ -79,6 +79,13 @@ class UserDaoTest {
     Assertions.assertEquals(3, users.size());
   }
 
+  @Test
+  void callGetAllOnEmptyDatabaseExpect0UsersInDb() throws SQLException {
+
+    List<User> users = userDao.getAll();
+    Assertions.assertTrue(users.isEmpty());
+  }
+
   private void insertTestUsers() throws SQLException {
 
     try (var connection = databaseConfig.getDatabase().getConnection();
