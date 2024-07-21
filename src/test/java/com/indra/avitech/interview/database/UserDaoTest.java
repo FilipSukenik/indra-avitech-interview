@@ -86,6 +86,22 @@ class UserDaoTest {
     Assertions.assertTrue(users.isEmpty());
   }
 
+  @Test
+  void insert3UsersToDatabaseCallDeleteExpectTableToBeEmpty() throws SQLException {
+
+    insertTestUsers();
+    assertUserCount(3);
+    userDao.deleteAll();
+    assertUserCount(0);
+  }
+
+  @Test
+  void deleteAllOnEmptyTableDoesNotThrowException() throws SQLException {
+
+    Assertions.assertDoesNotThrow(() -> userDao.deleteAll());
+    assertUserCount(0);
+  }
+
   private void insertTestUsers() throws SQLException {
 
     try (var connection = databaseConfig.getDatabase().getConnection();
