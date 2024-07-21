@@ -13,6 +13,8 @@ public class UserDao {
 
   private static final String GET_ALL_USERS_QUERY = "SELECT user_id, user_guid, user_name FROM susers";
 
+  private static final String DELETE_ALL_USERS_QUERY = "DELETE FROM susers WHERE 1";
+
   private final HikariDataSource databaseConnection;
 
   public UserDao(HikariDataSource databaseConnection) {
@@ -44,7 +46,11 @@ public class UserDao {
     return result;
   }
 
-  public void deleteAll() {
+  public void deleteAll() throws SQLException {
 
+    try (var connection = databaseConnection.getConnection();
+         var statement = connection.prepareStatement(DELETE_ALL_USERS_QUERY)) {
+      statement.execute();
+    }
   }
 }
