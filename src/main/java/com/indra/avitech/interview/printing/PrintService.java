@@ -11,6 +11,6 @@ public class PrintService {
 
   public void printAll(List<User> users) {
 
-    users.forEach((user) -> LOG.info(user.toString()));
+    users.forEach(user -> LOG.info(user.toString()));
   }
 }
