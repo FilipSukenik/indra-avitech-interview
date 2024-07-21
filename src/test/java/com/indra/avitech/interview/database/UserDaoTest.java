@@ -4,6 +4,7 @@ import com.indra.avitech.interview.DatabaseConfig;
 import com.indra.avitech.interview.database.model.User;
 import java.io.IOException;
 import java.sql.SQLException;
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,15 +30,43 @@ class UserDaoTest {
   @AfterEach
   void tearDown() {
 
-    databaseConfig = new DatabaseConfig();
     databaseConfig.teardown();
-    userDao = Mockito.spy(new UserDao(databaseConfig.getDatabase()));
   }
 
   @Test
   void callAddUserExpectUserToBeInDatabase() throws SQLException {
 
     userDao.add(new User(1, "test-uuid", "test-name"));
+    assertUserCount(1);
+  }
+
+  @Test
+  void callAddUniqueUserMultipleTimesExpectAllUsersInDb() throws SQLException {
+
+    userDao.add(new User(1, "test-uuid1", "test-name1"));
+    userDao.add(new User(2, "test-uuid2", "test-name2"));
+    userDao.add(new User(3, "test-uuid3", "test-name3"));
+    assertUserCount(3);
+  }
+
+  @Test
+  void addTwoUsersWithSameIdExpectConflict() throws SQLException {
+
+    userDao.add(new User(1, "test-uuid", "test-name"));
+    Assertions.assertThrows(JdbcSQLIntegrityConstraintViolationException.class,
+      () -> userDao.add(new User(1, "test-uuid2", "test-name")));
+  }
+
+  @Test
+  void addTwoUsersWithSameGuidExpectConflict() throws SQLException {
+
+    userDao.add(new User(1, "test-uuid", "test-name"));
+    Assertions.assertThrows(JdbcSQLIntegrityConstraintViolationException.class,
+      () -> userDao.add(new User(2, "test-uuid", "test-name")));
+  }
+
+  private void assertUserCount(int i) throws SQLException {
+
     try (var connection = databaseConfig.getDatabase().getConnection();
          var statement = connection.prepareStatement(COUNT_USERS_QUERY);
          var resultSet = statement.executeQuery()

@@ -32,7 +32,7 @@ class DatabaseAcceptanceTest {
   }
 
   @Test
-  void databaseAcceptanceCriteria() {
+  void databaseAcceptanceCriteria() throws SQLException {
     // given user dao
 
     // when 2 adds and one deleteAll are called,
