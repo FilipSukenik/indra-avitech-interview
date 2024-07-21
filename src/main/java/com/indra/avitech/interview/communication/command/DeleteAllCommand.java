@@ -7,6 +7,7 @@ public record DeleteAllCommand(UserDao userDao) implements Command {
 
   @Override
   public void execute() throws SQLException {
+
     userDao.deleteAll();
   }
 }

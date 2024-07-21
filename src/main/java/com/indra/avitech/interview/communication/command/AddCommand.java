@@ -8,6 +8,7 @@ public record AddCommand(User user, UserDao userDao) implements Command {
 
   @Override
   public void execute() throws SQLException {
+
     userDao.add(user);
   }
 }

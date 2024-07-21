@@ -5,7 +5,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseConfig {
@@ -45,6 +44,7 @@ public class DatabaseConfig {
   }
 
   private void runDatabaseCleanup() throws IOException {
+
     var inputStream = this.getClass().getClassLoader().getResourceAsStream("cleanup.sql");
     String ddl = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
     try (var connection = database.getConnection();

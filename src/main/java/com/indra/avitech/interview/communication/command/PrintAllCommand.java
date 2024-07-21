@@ -8,6 +8,7 @@ public record PrintAllCommand(PrintService printService, UserDao userDao) implem
 
   @Override
   public void execute() throws SQLException {
+
     printService.printAll(userDao.getAll());
   }
 }

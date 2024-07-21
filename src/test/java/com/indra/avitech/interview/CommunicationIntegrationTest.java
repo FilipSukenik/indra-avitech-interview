@@ -6,6 +6,7 @@ import com.indra.avitech.interview.communication.command.AddCommand;
 import com.indra.avitech.interview.communication.command.Command;
 import com.indra.avitech.interview.communication.command.DeleteAllCommand;
 import com.indra.avitech.interview.communication.command.PrintAllCommand;
+import com.indra.avitech.interview.communication.executor.CommandExecutor;
 import com.indra.avitech.interview.database.UserDao;
 import com.indra.avitech.interview.database.model.User;
 import com.indra.avitech.interview.printing.PrintService;
@@ -34,6 +35,8 @@ class CommunicationIntegrationTest {
 
   private PrintService printService;
 
+  private CommandExecutor executor;
+
   @BeforeEach
   void setUp() throws SQLException, IOException {
 
@@ -44,6 +47,7 @@ class CommunicationIntegrationTest {
     BlockingQueue<Command> messageBus = new LinkedBlockingQueue<>();
     consumer = Mockito.spy(new Consumer(messageBus));
     producer = Mockito.spy(new Producer(messageBus));
+    executor = Mockito.spy(new CommandExecutor(consumer));
 
     printService = Mockito.spy(new PrintService());
   }
@@ -57,8 +61,8 @@ class CommunicationIntegrationTest {
   @Test
   void executeWholeUseCase() throws InterruptedException {
     // given all variables and consumer running in own thread
-    Thread backgroundProcess = new Thread(consumer);
-    consumer.listenAsync(backgroundProcess);
+    Thread backgroundProcess = new Thread(executor);
+    executor.listenAsync(backgroundProcess);
 
     // when 5 specific commands are sent
     producer.send(new AddCommand(new User(1, "a1", "Robert"), userDao));
@@ -69,6 +73,7 @@ class CommunicationIntegrationTest {
 
     // then all components are called right amount of times and database is empty
     Awaitility.await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> {
+      Mockito.verify(executor, Mockito.times(5)).process(any());
       Mockito.verify(userDao, Mockito.times(1)).deleteAll();
       Mockito.verify(userDao, Mockito.times(2)).add(any());
       Mockito.verify(printService, Mockito.times(2)).printAll(any());
