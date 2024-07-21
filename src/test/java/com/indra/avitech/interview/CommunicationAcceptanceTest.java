@@ -2,9 +2,11 @@ package com.indra.avitech.interview;
 
 import com.indra.avitech.interview.communication.Consumer;
 import com.indra.avitech.interview.communication.Producer;
+import java.time.Duration;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
+import static org.awaitility.Awaitility.await;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,7 +40,12 @@ public class CommunicationAcceptanceTest {
     producer.send("DeleteAll");
     producer.send("PrintAll");
 
+    Thread backgroundProcess = new Thread(consumer);
+    consumer.listenAsync(backgroundProcess);
     // then consumer process is called 5 times
-    Mockito.verify(consumer, Mockito.times(5)).process(any());
+    await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> {
+        Mockito.verify(consumer, Mockito.times(5)).process(any());
+      }
+    );
   }
 }

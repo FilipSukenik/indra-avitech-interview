@@ -2,20 +2,45 @@ package com.indra.avitech.interview.communication;
 
 import java.util.concurrent.BlockingQueue;
 
-public class Consumer extends Client {
+public class Consumer extends Client implements Runnable {
+
+  private boolean isRunning;
 
   public Consumer(BlockingQueue<String> messageBus) {
 
     super(messageBus);
   }
 
-  public void consume() throws InterruptedException {
+  public String consume() throws InterruptedException {
 
-    String message = messageBus.take();
-    process(message);
+    return messageBus.take();
   }
 
   public void process(String message) {
 
+  }
+
+  @Override
+  public void run() {
+
+    while (isRunning) {
+      try {
+        String message = consume();
+        process(message);
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
+    }
+  }
+
+  public void listenAsync(Thread backgroundProcess) {
+
+    isRunning = true;
+    backgroundProcess.start();
+  }
+
+  public void stopAsyncRun() {
+
+    isRunning = false;
   }
 }
