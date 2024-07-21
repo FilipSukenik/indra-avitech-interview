@@ -5,11 +5,12 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseConfig {
 
-  public HikariDataSource database;
+  private HikariDataSource database;
 
   public DatabaseConfig() {
 
