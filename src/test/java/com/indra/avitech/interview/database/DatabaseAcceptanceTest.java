@@ -1,6 +1,10 @@
 package com.indra.avitech.interview.database;
 
+import com.indra.avitech.interview.DatabaseConfig;
 import com.indra.avitech.interview.database.model.User;
+import java.io.IOException;
+import java.sql.SQLException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,10 +15,20 @@ class DatabaseAcceptanceTest {
 
   private UserDao userDao;
 
-  @BeforeEach
-  void setUp() {
+  private DatabaseConfig databaseConfig;
 
-    userDao = Mockito.spy(new UserDao());
+  @BeforeEach
+  void setUp() throws SQLException, IOException {
+
+    databaseConfig = new DatabaseConfig();
+    databaseConfig.setUp();
+    userDao = Mockito.spy(new UserDao(databaseConfig.getDatabase()));
+  }
+
+  @AfterEach
+  void tearDown() {
+
+    databaseConfig.teardown();
   }
 
   @Test

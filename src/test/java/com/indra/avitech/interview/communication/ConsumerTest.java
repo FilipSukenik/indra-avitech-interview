@@ -3,13 +3,12 @@ package com.indra.avitech.interview.communication;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.junit.jupiter.api.Assertions;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.doThrow;
 
-public class ConsumerTest {
+class ConsumerTest {
 
   private Consumer consumer;
 
