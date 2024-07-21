@@ -21,4 +21,15 @@ class AddCommandTest {
     var userMock = Mockito.mock(User.class);
     Assertions.assertThrows(IllegalArgumentException.class, () -> new AddCommand(userMock, null));
   }
+
+  @Test
+  void gettersCoverageTest() {
+
+    var userDaoMock = Mockito.mock(UserDao.class);
+    var userMock = Mockito.mock(User.class);
+
+    var command = new AddCommand(userMock, userDaoMock);
+    Assertions.assertEquals(userDaoMock, command.userDao());
+    Assertions.assertEquals(userMock, command.user());
+  }
 }

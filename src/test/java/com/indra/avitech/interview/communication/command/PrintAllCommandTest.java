@@ -22,4 +22,15 @@ class PrintAllCommandTest {
     Assertions.assertThrows(IllegalArgumentException.class, () -> new PrintAllCommand(printServiceMock, null));
   }
 
+  @Test
+  void gettersTest() {
+
+    var userDaoMock = Mockito.mock(UserDao.class);
+    var printServiceMock = Mockito.mock(PrintService.class);
+
+    var command = new PrintAllCommand(printServiceMock, userDaoMock);
+
+    Assertions.assertEquals(userDaoMock, command.userDao());
+    Assertions.assertEquals(printServiceMock, command.printService());
+  }
 }

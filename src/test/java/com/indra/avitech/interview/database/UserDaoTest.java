@@ -1,7 +1,6 @@
 package com.indra.avitech.interview.database;
 
 import com.indra.avitech.interview.DatabaseConfig;
-import com.indra.avitech.interview.communication.command.PrintAllCommand;
 import com.indra.avitech.interview.database.model.User;
 import java.io.IOException;
 import java.sql.SQLException;
