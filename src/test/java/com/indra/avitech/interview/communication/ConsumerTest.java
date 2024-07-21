@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -29,7 +28,6 @@ class ConsumerTest {
   void consumeThrowsInterruptedExceptionExpectThreadToBeInterrupted() throws InterruptedException {
 
     doThrow(new InterruptedException()).when(consumer).consume();
-    consumer.setRunning(true);
     consumer.run();
 
     Assertions.assertTrue(Thread.currentThread().isInterrupted());
@@ -40,7 +38,6 @@ class ConsumerTest {
 
     doReturn(Mockito.mock(AddCommand.class)).when(consumer).consume();
     doThrow(new SQLException()).when(consumer).process(any());
-    consumer.setRunning(true);
 
     Assertions.assertThrows(RuntimeException.class, () -> consumer.run());
   }
