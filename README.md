@@ -5,7 +5,7 @@ Create program in Java language that will process commands from FIFO queue using
 Consumer pattern.
 
 #### Supported commands are the following:
-- Add  - adds a user into a database
+- Add - adds a user into a database
 - PrintAll – prints all users into standard output
 - DeleteAll – deletes all users from database
 
@@ -36,8 +36,8 @@ without need of serialization and deserialization mechanism.
 #### Decomposition
 There are 3 concepts that are separated to 3 different components:
 1. Database - using hikari to provide database connection.
-2. Communication - using shared message bus which is . 
-3. Printing
+2. Communication - using shared message bus which is uses FIFO algorithm. Producing is executed with put() method which blocks thread until element is successfully added to queue.
+3. Printing - using SLF4J logger with logback realisation 
 Each component serves single purpose and all it's features are encapsulated.
 
 #### Design patterns
@@ -48,4 +48,4 @@ that can be replaced (mocked) by different implementation.
 
 #### Testing
 Higher level tests (acceptance and integration) were created before real implementation using ATDD. I used Red, Green, Refactor approach
-for testing. When running tests with coverage inside IDE it reports 100% coverage.
+for testing. When running tests with coverage inside IDE reports 100% coverage.
